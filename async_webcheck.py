@@ -45,17 +45,18 @@ async def get_iplist(domain = ''):
 #    finally:
 #      if resp['status']=='200':
 #        print("{} is ok!".format(ip))
-tasks=[]
-with open('domain_list.txt','r') as file:
-  for domain_line in file:
-    coroutine=get_iplist(domain_line.strip())
-    task=asyncio.ensure_future(coroutine)
-#    task.add_done_callback(callback)
-    tasks.append(task)  
-#couortine1=get_iplist('xn--zf')
-loop=asyncio.get_event_loop()
-#task1=asyncio.ensure_future(couortine1)
-#task1.add_done_callback(callback)
-loop.run_until_complete(asyncio.wait(tasks))
-loop.close()
-print("Time Cost is:",now() - start)
+if __name__="__main__":
+  tasks=[]
+  with open('domain_list.txt','r') as file:
+    for domain_line in file:
+      coroutine=get_iplist(domain_line.strip())
+      task=asyncio.ensure_future(coroutine)
+#     task.add_done_callback(callback)
+      tasks.append(task)  
+  #couortine1=get_iplist('xn--zf')
+  loop=asyncio.get_event_loop()
+  #task1=asyncio.ensure_future(couortine1)
+  #task1.add_done_callback(callback)
+  loop.run_until_complete(asyncio.wait(tasks))
+  loop.close()
+  print("Time Cost is:",now() - start)
