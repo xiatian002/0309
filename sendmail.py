@@ -26,6 +26,6 @@ msg['To']=TO
 server=smtplib.SMTP()
 server.connect(HOST,"25")
 server.starttls()
-server.login("zhang_peng101@126.com","588764/a")
+server.login("zhang_peng101@126.com","xxxxxx")
 server.sendmail(FROM_ADDR,TO,msg.as_string())
 server.quit()
