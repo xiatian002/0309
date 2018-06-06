@@ -3,10 +3,12 @@ import dns.resolver
 import os,time
 import httplib2
 import asyncio
+import xlsxwriter
 now = lambda : time.time()#定义一个获取当前时间的匿名函数
 start=now()#获取程序开始执行的时间
 
 #appdomain = 'xn--164b'
+file_name="domain_v6_avail_"+time.strftime("%Y-%m-%d",time.localtime(time.time()))+".xlsx"
 
 async def dns_query(domain):#定义dns查询函数，该函数的dns查询过程会消耗比较多的时间
   iplist = []
@@ -17,8 +19,11 @@ async def dns_query(domain):#定义dns查询函数，该函数的dns查询过程
         iplist.append(j.address)
   return iplist
 async def get_iplist(domain = ''):
+  workbook = xlsxwriter.Workbook(file_name)
+  worksheet = workbook.add_worksheet()
   try: 
     A = await dns_query(domain)#将消耗比较多的操作放到await后，执行时挂起。#await 后边必须跟一个awaitable对象，须是协程
+    n=0
     for ip in A:
       checkurl=ip+":80"
       getcontent=""
@@ -28,8 +33,10 @@ async def get_iplist(domain = ''):
         resp,getcontent=conn.request("http://"+checkurl)
       finally:
         if resp['status']=='200':
-          print("{} is ok!".format(ip))
-          return ip      
+          worksheet.write(n,0,ip)
+          #print("{} is ok!".format(ip))
+          return ip
+    workbook.close()      
   except Exception as e:
     print("dns resolver error %s" % str(e))
     return
@@ -45,7 +52,7 @@ async def get_iplist(domain = ''):
 #    finally:
 #      if resp['status']=='200':
 #        print("{} is ok!".format(ip))
-if __name__="__main__":
+if __name__=="__main__":
   tasks=[]
   with open('domain_list.txt','r') as file:
     for domain_line in file:
