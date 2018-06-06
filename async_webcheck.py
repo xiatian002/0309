@@ -54,7 +54,7 @@ async def get_iplist(domain = ''):
 #        print("{} is ok!".format(ip))
 if __name__=="__main__":
   tasks=[]
-  with open('domain_list.txt','r') as file:
+  with open('py_domain.txt','r') as file:
     for domain_line in file:
       coroutine=get_iplist(domain_line.strip())
       task=asyncio.ensure_future(coroutine)
